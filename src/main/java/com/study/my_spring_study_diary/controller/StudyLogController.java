@@ -2,7 +2,10 @@ package com.study.my_spring_study_diary.controller;
 
 import com.study.my_spring_study_diary.dto.request.StudyLogCreateRequest;
 import com.study.my_spring_study_diary.dto.response.StudyLogResponse;
+import com.study.my_spring_study_diary.entity.StudyLog;
 import com.study.my_spring_study_diary.global.common.ApiResponse;
+import com.study.my_spring_study_diary.global.common.PageRequest;
+import com.study.my_spring_study_diary.global.common.PageResponse;
 import com.study.my_spring_study_diary.service.StudyLogService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -43,14 +46,9 @@ public class StudyLogController {
      * POST /api/v1/logs
      */
     @PostMapping
-    public ResponseEntity<ApiResponse<StudyLogResponse>> createStudyLog(@RequestBody StudyLogCreateRequest request) {
+    public StudyLogResponse createStudyLog(@RequestBody StudyLogCreateRequest request) {
         //Service 호출하여 학습 일지 생성
-        StudyLogResponse response = studyLogService.createStudyLog(request);
-
-        //201 Created 상태 코드와 함께 응답
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ApiResponse.success(response));
+        return studyLogService.createStudyLog(request);
     }
 
     /**
@@ -75,7 +73,7 @@ public class StudyLogController {
      * <p>
      * GET /api/v1/logs/{id}
      */
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public StudyLogResponse getStudyLogById(@PathVariable Long id) {
         return studyLogService.getStudyLogById(id);
     }
@@ -110,5 +108,26 @@ public class StudyLogController {
     @GetMapping("/category/{category}")
     public List<StudyLogResponse> getStudyLogsByCategory(@PathVariable String category) {
         return studyLogService.getStudyLogsByCategory(category);
+    }
+
+    /**
+     * 페이징 처리된 학습 일지 목록 조회
+     * GET /api/v1/logs/page?page=0&size=10&sortBy=createdAt&sortDirection=DESC
+     */
+    @GetMapping("/page")
+    public PageResponse<StudyLogResponse> getStudyLogsWithPaging(@ModelAttribute PageRequest pageRequest) {
+        return studyLogService.getStudyLogsWithPaging(pageRequest);
+    }
+
+    /**
+     * 카테고리별 페이징 조회
+     * GET /api/v1/logs/category/{category}/page?page=0&size=5
+     */
+    @GetMapping("/category/{category}/page")
+    public PageResponse<StudyLogResponse> getStudyLogsByCategoryWithPaging (
+            @PathVariable String category,
+            @ModelAttribute PageRequest pageRequest) {
+
+        return studyLogService.getStudyLogsByCategoryWithPaging(category, pageRequest);
     }
 }
