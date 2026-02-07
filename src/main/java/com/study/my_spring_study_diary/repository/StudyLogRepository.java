@@ -64,6 +64,32 @@ public class StudyLogRepository {
     }
 
     /**
+     * 학습 일지 수정 (Update)
+     * Map은 같은 키로 put하면 덮어쓰므로 save와 동일하게 동작
+     * 하지만 의미를 명확히 하기 위해 별도 메서드로 분리
+     */
+    public StudyLog update(StudyLog studyLog) {
+        validationStudyLogById(studyLog);
+        database.put(studyLog.getId(), studyLog);
+        return studyLog;
+    }
+
+    /**
+     * studyLog의 ID 값 검증
+     */
+    private void validationStudyLogById(StudyLog studyLog) {
+        if (studyLog.getId() == null) {
+            throw new IllegalArgumentException("수정할 학습 일지의 ID가 없습니다.");
+        }
+
+        if (!database.containsKey(studyLog.getId())) {
+            throw new IllegalArgumentException(
+                    "해당 학습 일지를 찾을 수 없습니다. (id: " + studyLog.getId() + ")"
+            );
+        }
+    }
+
+    /**
      * 전체 학습 일지 조회 (최신순 정렬)
      */
     public List<StudyLog> findAll() {

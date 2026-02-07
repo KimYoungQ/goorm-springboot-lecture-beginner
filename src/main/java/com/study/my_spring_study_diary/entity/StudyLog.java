@@ -1,8 +1,11 @@
 package com.study.my_spring_study_diary.entity;
 
 
+import com.study.my_spring_study_diary.dto.request.StudyLogUpdateRequest;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class StudyLog {
 
@@ -31,6 +34,29 @@ public class StudyLog {
         this.studyTime = studyTime;
         this.studyDate = studyDate;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 학습 일지 정보 수정
+     * <p>
+     * null이 아닌 값만 업데이트합니다.
+     * 이 방식을 "Dirty Checking" 또는 "Partial Update"라고 합니다.
+     */
+    public void update(StudyLogUpdateRequest studyLogUpdateRequest) {
+        Optional.ofNullable(studyLogUpdateRequest.getTitle()).ifPresent(this::setTitle);
+        Optional.ofNullable(studyLogUpdateRequest.getContent()).ifPresent(this::setContent);
+        Optional.ofNullable(studyLogUpdateRequest.getCategory())
+                .map(String::toUpperCase)
+                .map(Category::valueOf)
+                .ifPresent(this::setCategory);
+        Optional.ofNullable(studyLogUpdateRequest.getCategory())
+                .map(String::toUpperCase)
+                .map(Category::valueOf)
+                .ifPresent(this::setCategory);
+        Optional.ofNullable(studyLogUpdateRequest.getStudyTime()).ifPresent(this::setStudyTime);
+        Optional.ofNullable(studyLogUpdateRequest.getStudyDate()).ifPresent(this::setStudyDate);
+
         this.updatedAt = LocalDateTime.now();
     }
 

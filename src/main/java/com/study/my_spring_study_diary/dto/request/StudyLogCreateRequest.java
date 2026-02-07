@@ -15,6 +15,7 @@ public class StudyLogCreateRequest {
     public StudyLogCreateRequest() {
     }
 
+    // Getter
     public String getTitle() {
         return title;
     }
