@@ -2,6 +2,7 @@ package com.study.my_spring_study_diary.controller;
 
 import com.study.my_spring_study_diary.dto.request.StudyLogCreateRequest;
 import com.study.my_spring_study_diary.dto.request.StudyLogUpdateRequest;
+import com.study.my_spring_study_diary.dto.response.StudyLogDeleteResponse;
 import com.study.my_spring_study_diary.dto.response.StudyLogResponse;
 import com.study.my_spring_study_diary.entity.StudyLog;
 import com.study.my_spring_study_diary.global.common.ApiResponse;
@@ -137,8 +138,7 @@ public class StudyLogController {
      * PUT /api/v1/logs/{id}
      *
      * @PutMapping: PUT 요청을 처리하는 어노테이션
-     *              리소스의 전체 또는 일부를 수정할 때 사용
-     *
+     * 리소스의 전체 또는 일부를 수정할 때 사용
      * @PathVariable: URL의 {id} 부분을 파라미터로 받음
      * @RequestBody: HTTP Body의 JSON을 객체로 변환
      */
@@ -149,5 +149,20 @@ public class StudyLogController {
         StudyLogResponse response = studyLogService.updateStudyLog(id, request);
 
         return response;
+    }
+
+    /**
+     * 학습 일지 삭제 API
+     * <p>
+     * DELETE /api/v1/logs/{id}
+     *
+     * @param id 삭제할 학습 일지 ID
+     * @return 삭제 결과
+     */
+    @DeleteMapping("/{id}")
+    public StudyLogDeleteResponse deleteStudyLog(@PathVariable Long id) {
+        StudyLogDeleteResponse test = studyLogService.deleteStudyLog(id);
+
+        return test;
     }
 }

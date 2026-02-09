@@ -2,6 +2,7 @@ package com.study.my_spring_study_diary.service;
 
 import com.study.my_spring_study_diary.dto.request.StudyLogCreateRequest;
 import com.study.my_spring_study_diary.dto.request.StudyLogUpdateRequest;
+import com.study.my_spring_study_diary.dto.response.StudyLogDeleteResponse;
 import com.study.my_spring_study_diary.dto.response.StudyLogResponse;
 import com.study.my_spring_study_diary.entity.Category;
 import com.study.my_spring_study_diary.entity.StudyLog;
@@ -271,5 +272,28 @@ public class StudyLogService {
         if (request.getStudyDate() != null && request.getStudyDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("학습 날짜는 미래일 수 없습니다.");
         }
+    }
+
+    /**
+     * 학습 일지를 삭제합니다.
+     *
+     * @param id 삭제할 학습 일지 ID
+     * @return 삭제 결과 응답
+     * @throws StudyLogNotFoundException 해당 ID의 학습 일지가validationStudyLogById 없는 경우
+     */
+    public StudyLogDeleteResponse deleteStudyLog(Long id) {
+        // 1. 존재 여부 확인
+//        if (!StudyLogRepository.existsById(id)) {
+//            throw new StudyLogNotFoundException(id);
+//        }
+        StudyLog studyLog = studyLogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
+
+        //2. 삭제 수행
+        studyLogRepository.deleteById(id);
+
+        // 3. 삭제 결과 반환
+        return StudyLogDeleteResponse.of(id);
     }
 }
