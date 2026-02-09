@@ -248,4 +248,16 @@ public class StudyLogRepository {
     private int calculateTotalPages(long totalElements, int pageSize) {
         return (int) Math.ceil((double) totalElements / pageSize);
     }
+
+    /**
+     * ID로 학습 일지를 삭제합니다.
+     *
+     * @param id 삭제할 학습 일지 ID
+     * @return 삭제 성공 여부 (true: 삭제됨, false: 해당 ID 없음)
+     */
+    public boolean deleteById(Long id) {
+        // Map.remove()는 삭제된 값을 반환, 없으면 null 반환
+        StudyLog removed = database.remove(id);
+        return removed != null;
+    }
 }
