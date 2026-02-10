@@ -111,26 +111,26 @@ public class StudyLogController {
         return studyLogService.getStudyLogsByCategory(category);
     }
 
-//    /**
-//     * 페이징 처리된 학습 일지 목록 조회
-//     * GET /api/v1/logs/page?page=0&size=10&sortBy=createdAt&sortDirection=DESC
-//     */
-//    @GetMapping("/page")
-//    public PageResponse<StudyLogResponse> getStudyLogsWithPaging(@ModelAttribute PageRequest pageRequest) {
-//        return studyLogService.getStudyLogsWithPaging(pageRequest);
-//    }
-//
-//    /**
-//     * 카테고리별 페이징 조회
-//     * GET /api/v1/logs/category/{category}/page?page=0&size=5
-//     */
-//    @GetMapping("/category/{category}/page")
-//    public PageResponse<StudyLogResponse> getStudyLogsByCategoryWithPaging(
-//            @PathVariable String category,
-//            @ModelAttribute PageRequest pageRequest) {
-//
-//        return studyLogService.getStudyLogsByCategoryWithPaging(category, pageRequest);
-//    }
+    /**
+     * 페이징 처리된 학습 일지 목록 조회
+     * GET /api/v1/logs/page?page=0&size=10&sortBy=createdAt&sortDirection=DESC
+     */
+    @GetMapping("/page")
+    public PageResponse<StudyLogResponse> getStudyLogsWithPaging(@ModelAttribute PageRequest pageRequest) {
+        return studyLogService.getStudyLogsWithPaging(pageRequest);
+    }
+
+    /**
+     * 카테고리별 페이징 조회
+     * GET /api/v1/logs/category/{category}/page?page=0&size=5
+     */
+    @GetMapping("/category/{category}/page")
+    public PageResponse<StudyLogResponse> getStudyLogsByCategoryWithPaging(
+            @PathVariable String category,
+            @ModelAttribute PageRequest pageRequest) {
+
+        return studyLogService.getStudyLogsByCategoryWithPaging(category, pageRequest);
+    }
 
     /**
      * 학습 일지 수정
@@ -149,18 +149,5 @@ public class StudyLogController {
         StudyLogResponse response = studyLogService.updateStudyLog(id, request);
 
         return response;
-    }
-
-    /**
-     * 학습 일지 삭제 API
-     *
-     * DELETE /api/v1/logs/{id}
-     *
-     * @param id 삭제할 학습 일지 ID
-     * @return 삭제 결과
-     */
-    @DeleteMapping("/{id}")
-    public StudyLogDeleteResponse deleteStudyLog(@PathVariable Long id) {
-        return studyLogService.deleteStudyLog(id);
     }
 }
