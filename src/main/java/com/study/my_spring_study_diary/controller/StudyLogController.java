@@ -116,29 +116,30 @@ public class StudyLogController {
      * 페이징 처리된 학습 일지 목록 조회
      * GET /api/v1/logs/page?page=0&size=10&sortBy=createdAt&sortDirection=DESC
      */
-    @GetMapping("/page")
-    public PageResponse<StudyLogResponse> getStudyLogsWithPaging(@ModelAttribute PageRequest pageRequest) {
-        return studyLogService.getStudyLogsWithPaging(pageRequest);
-    }
+//    @GetMapping("/page")
+//    public PageResponse<StudyLogResponse> getStudyLogsWithPaging(@ModelAttribute PageRequest pageRequest) {
+//        return studyLogService.getStudyLogsWithPaging(pageRequest);
+//    }
 
     /**
      * 카테고리별 페이징 조회
      * GET /api/v1/logs/category/{category}/page?page=0&size=5
      */
-    @GetMapping("/category/{category}/page")
-    public PageResponse<StudyLogResponse> getStudyLogsByCategoryWithPaging(
-            @PathVariable String category,
-            @ModelAttribute PageRequest pageRequest) {
-
-        return studyLogService.getStudyLogsByCategoryWithPaging(category, pageRequest);
-    }
+//    @GetMapping("/category/{category}/page")
+//    public PageResponse<StudyLogResponse> getStudyLogsByCategoryWithPaging(
+//            @PathVariable String category,
+//            @ModelAttribute PageRequest pageRequest) {
+//
+//        return studyLogService.getStudyLogsByCategoryWithPaging(category, pageRequest);
+//    }
 
     /**
      * 학습 일지 수정
      * PUT /api/v1/logs/{id}
      *
      * @PutMapping: PUT 요청을 처리하는 어노테이션
-     * 리소스의 전체 또는 일부를 수정할 때 사용
+     *              리소스의 전체 또는 일부를 수정할 때 사용
+     *
      * @PathVariable: URL의 {id} 부분을 파라미터로 받음
      * @RequestBody: HTTP Body의 JSON을 객체로 변환
      */
@@ -151,9 +152,11 @@ public class StudyLogController {
         return response;
     }
 
+    // ========== DELETE ==========
+
     /**
      * 학습 일지 삭제 API
-     * <p>
+     *
      * DELETE /api/v1/logs/{id}
      *
      * @param id 삭제할 학습 일지 ID
@@ -161,8 +164,6 @@ public class StudyLogController {
      */
     @DeleteMapping("/{id}")
     public StudyLogDeleteResponse deleteStudyLog(@PathVariable Long id) {
-        StudyLogDeleteResponse test = studyLogService.deleteStudyLog(id);
-
-        return test;
+        return studyLogService.deleteStudyLog(id);
     }
 }
