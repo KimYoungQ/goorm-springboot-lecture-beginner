@@ -286,12 +286,12 @@ public class StudyLogService {
 //        if (!StudyLogRepository.existsById(id)) {
 //            throw new StudyLogNotFoundException(id);
 //        }
-        StudyLog studyLog = studyLogRepository.findById(id)
+        StudyLog studyLog = studyLogDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
 
         //2. 삭제 수행
-        studyLogRepository.deleteById(id);
+        studyLogDao.deleteById(id);
 
         // 3. 삭제 결과 반환
         return StudyLogDeleteResponse.of(id);
