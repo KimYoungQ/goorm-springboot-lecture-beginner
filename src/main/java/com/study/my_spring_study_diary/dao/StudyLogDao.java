@@ -11,23 +11,23 @@ public interface StudyLogDao {
 
     StudyLog save(StudyLog studyLog);
 
-    Optional<StudyLog> findById(Long id);
-
-    List<StudyLog> findAll();
-
-    List<StudyLog> findByCategory(String category);
-
-    List<StudyLog> findByCategory(Category category);
-
-    List<StudyLog> findByStudyDate(LocalDate date);
-
-    boolean existsById(Long id);
-
-    long count();
-
-    StudyLog update(StudyLog studyLog);
-
-    boolean deleteById(Long id);
-
-    void deleteAll();
+//    Optional<StudyLog> findById(Long id);
+//
+//    List<StudyLog> findAll();
+//
+//    List<StudyLog> findByCategory(String category);
+//
+//    List<StudyLog> findByCategory(Category category);
+//
+//    List<StudyLog> findByStudyDate(LocalDate date);
+//
+//    boolean existsById(Long id);
+//
+//    long count();
+//
+//    StudyLog update(StudyLog studyLog);
+//
+//    boolean deleteById(Long id);
+//
+//    void deleteAll();
 }

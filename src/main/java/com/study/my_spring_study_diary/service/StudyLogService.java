@@ -68,58 +68,58 @@ public class StudyLogService {
         return StudyLogResponse.from(savedStudyLog);
     }
 
-    /**
-     * 전체 학습 일지 목록 조회
-     */
-    public List<StudyLogResponse> getAllStudyLogs() {
-        List<StudyLog> studyLogs = studyLogDao.findAll();
-
-        //Entity 리스트 -> Response DTO 리스트로 반환
-        return studyLogs.stream()
-                .map(StudyLogResponse::from)
-                .collect(Collectors.toList());
-    }
-
-
-    /**
-     * ID로 학습 일지 단건 조회
-     */
-    public StudyLogResponse getStudyLogById(Long id) {
-        StudyLog studyLog = studyLogDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
-
-        return StudyLogResponse.from(studyLog);
-    }
-
-    /**
-     * 날짜별 학습 일지 조회
-     */
-    public List<StudyLogResponse> getStudyLogsByDate(LocalDate date) {
-        List<StudyLog> studyLogs = studyLogDao.findByStudyDate(date);
-
-        return studyLogs.stream()
-                .map(StudyLogResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 카테고리 학습 일지 조회
-     */
-    public List<StudyLogResponse> getStudyLogsByCategory(String categoryName) {
-        // 문자열 -> Enum 반환(유효성 검증 포함)
-        Category category;
-        try {
-            category = Category.valueOf(categoryName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("유효하지 않은 카테고리입니다: " + categoryName);
-        }
-
-        List<StudyLog> studyLogs = studyLogDao.findByCategory(category);
-
-        return studyLogs.stream()
-                .map(StudyLogResponse::from)
-                .collect(Collectors.toList());
-    }
+//    /**
+//     * 전체 학습 일지 목록 조회
+//     */
+//    public List<StudyLogResponse> getAllStudyLogs() {
+//        List<StudyLog> studyLogs = studyLogDao.findAll();
+//
+//        //Entity 리스트 -> Response DTO 리스트로 반환
+//        return studyLogs.stream()
+//                .map(StudyLogResponse::from)
+//                .collect(Collectors.toList());
+//    }
+//
+//
+//    /**
+//     * ID로 학습 일지 단건 조회
+//     */
+//    public StudyLogResponse getStudyLogById(Long id) {
+//        StudyLog studyLog = studyLogDao.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
+//
+//        return StudyLogResponse.from(studyLog);
+//    }
+//
+//    /**
+//     * 날짜별 학습 일지 조회
+//     */
+//    public List<StudyLogResponse> getStudyLogsByDate(LocalDate date) {
+//        List<StudyLog> studyLogs = studyLogDao.findByStudyDate(date);
+//
+//        return studyLogs.stream()
+//                .map(StudyLogResponse::from)
+//                .collect(Collectors.toList());
+//    }
+//
+//    /**
+//     * 카테고리 학습 일지 조회
+//     */
+//    public List<StudyLogResponse> getStudyLogsByCategory(String categoryName) {
+//        // 문자열 -> Enum 반환(유효성 검증 포함)
+//        Category category;
+//        try {
+//            category = Category.valueOf(categoryName.toUpperCase());
+//        } catch (IllegalArgumentException e) {
+//            throw new IllegalArgumentException("유효하지 않은 카테고리입니다: " + categoryName);
+//        }
+//
+//        List<StudyLog> studyLogs = studyLogDao.findByCategory(category);
+//
+//        return studyLogs.stream()
+//                .map(StudyLogResponse::from)
+//                .collect(Collectors.toList());
+//    }
 
     /**
      * 페이징 처리된 학습 일지 목록 조회
@@ -178,48 +178,48 @@ public class StudyLogService {
      * @param request 수정 요청 데이터
      * @return 수정된 학습 일지 응답
      */
-    public StudyLogResponse updateStudyLog(Long id, StudyLogUpdateRequest request) {
-
-        // 1. 기존 학습 일지 조회
-        StudyLog studyLog = studyLogDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
-
-        // 2. 수정할 내용이 있는지 확인
-        if (request.hasNoUpdates()) {
-            throw new IllegalArgumentException("수정할 내용이 없습니다.");
-        }
-
-        // 3. 수정할 값들의 유효성 검증
-        validateUpdateRequest(request);
-
-        // 4. 카테고리와 이해도 변환 (null이 아닌 경우에만);
-        Category category = null;
-        if (request.getCategory() != null) {
-            try {
-                category = Category.valueOf(request.getCategory().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(
-                        "유효하지 않은 카테고리입니다: " + request.getCategory());
-            }
-        }
-
-        Understanding understanding = null;
-        if (request.getUnderstanding() != null) {
-            try {
-                understanding = Understanding.valueOf(request.getUnderstanding().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(
-                        "유효하지 않은 이해도입니다: " + request.getUnderstanding());
-            }
-        }
-
-        studyLog.update(request);
-
-        // 6. 저장 및 응답 반환
-        StudyLog updatedStudying = studyLogDao.update(studyLog);
-        return StudyLogResponse.from(updatedStudying);
-    }
+//    public StudyLogResponse updateStudyLog(Long id, StudyLogUpdateRequest request) {
+//
+//        // 1. 기존 학습 일지 조회
+//        StudyLog studyLog = studyLogDao.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException(
+//                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
+//
+//        // 2. 수정할 내용이 있는지 확인
+//        if (request.hasNoUpdates()) {
+//            throw new IllegalArgumentException("수정할 내용이 없습니다.");
+//        }
+//
+//        // 3. 수정할 값들의 유효성 검증
+//        validateUpdateRequest(request);
+//
+//        // 4. 카테고리와 이해도 변환 (null이 아닌 경우에만);
+//        Category category = null;
+//        if (request.getCategory() != null) {
+//            try {
+//                category = Category.valueOf(request.getCategory().toUpperCase());
+//            } catch (IllegalArgumentException e) {
+//                throw new IllegalArgumentException(
+//                        "유효하지 않은 카테고리입니다: " + request.getCategory());
+//            }
+//        }
+//
+//        Understanding understanding = null;
+//        if (request.getUnderstanding() != null) {
+//            try {
+//                understanding = Understanding.valueOf(request.getUnderstanding().toUpperCase());
+//            } catch (IllegalArgumentException e) {
+//                throw new IllegalArgumentException(
+//                        "유효하지 않은 이해도입니다: " + request.getUnderstanding());
+//            }
+//        }
+//
+//        studyLog.update(request);
+//
+//        // 6. 저장 및 응답 반환
+//        StudyLog updatedStudying = studyLogDao.update(studyLog);
+//        return StudyLogResponse.from(updatedStudying);
+//    }
 
     /**
      * 생성 요청 유효성 검증
@@ -281,19 +281,15 @@ public class StudyLogService {
      * @return 삭제 결과 응답
      * @throws StudyLogNotFoundException 해당 ID의 학습 일지가validationStudyLogById 없는 경우
      */
-    public StudyLogDeleteResponse deleteStudyLog(Long id) {
-        // 1. 존재 여부 확인
-//        if (!StudyLogRepository.existsById(id)) {
-//            throw new StudyLogNotFoundException(id);
-//        }
-        StudyLog studyLog = studyLogDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
-
-        //2. 삭제 수행
-        studyLogDao.deleteById(id);
-
-        // 3. 삭제 결과 반환
-        return StudyLogDeleteResponse.of(id);
-    }
+//    public StudyLogDeleteResponse deleteStudyLog(Long id) {
+//        StudyLog studyLog = studyLogDao.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException(
+//                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
+//
+//        //2. 삭제 수행
+//        studyLogDao.deleteById(id);
+//
+//        // 3. 삭제 결과 반환
+//        return StudyLogDeleteResponse.of(id);
+//    }
 }
