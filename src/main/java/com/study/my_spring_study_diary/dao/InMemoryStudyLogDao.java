@@ -143,20 +143,20 @@ public class InMemoryStudyLogDao implements StudyLogDao {
     }
 
 
-//    // ========== DELETE ==========
-//    @Override
-//    public boolean deleteById(Long id) {
-//        // Map.remove()는 삭제된 값을 반환, 없으면 null 반환
-//        StudyLog removed = database.remove(id);
-//        return removed != null;
-//    }
-//
-//    @Override
-//    public void deleteAll() {
-//        database.clear();
-//        // 테스트 용도로 시퀀스도 초기화
-//        sequence.set(1);
-//    }
+    // ========== DELETE ==========
+    @Override
+    public boolean deleteById(Long id) {
+        // Map.remove()는 삭제된 값을 반환, 없으면 null 반환
+        StudyLog removed = database.remove(id);
+        return removed != null;
+    }
+
+    @Override
+    public void deleteAll() {
+        database.clear();
+        // 테스트 용도로 시퀀스도 초기화
+        sequence.set(1);
+    }
 //    /**
 //     * 페이징 처리된 학습 일지 조회
 //     *

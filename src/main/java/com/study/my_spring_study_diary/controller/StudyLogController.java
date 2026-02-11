@@ -162,8 +162,8 @@ public class StudyLogController {
      * @param id 삭제할 학습 일지 ID
      * @return 삭제 결과
      */
-//    @DeleteMapping("/{id}")
-//    public StudyLogDeleteResponse deleteStudyLog(@PathVariable Long id) {
-//        return studyLogService.deleteStudyLog(id);
-//    }
+    @DeleteMapping("/{id}")
+    public StudyLogDeleteResponse deleteStudyLog(@PathVariable Long id) {
+        return studyLogService.deleteStudyLog(id);
+    }
 }

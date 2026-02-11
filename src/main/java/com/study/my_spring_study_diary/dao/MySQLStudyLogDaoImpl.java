@@ -129,6 +129,20 @@ public class MySQLStudyLogDaoImpl implements StudyLogDao {
         return studyLog;
     }
 
+    @Override
+    public boolean deleteById(Long id) {
+        String sql = """
+                DELETE FROM study_logs WHERE id = ?
+                """;
+        int deleted = jdbcTemplate.update(sql,id);
+        return deleted > 0;
+    }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM study_logs";
+        jdbcTemplate.update(sql);
+    }
 
     // ========== PRIVATE METHODS ==========
 
