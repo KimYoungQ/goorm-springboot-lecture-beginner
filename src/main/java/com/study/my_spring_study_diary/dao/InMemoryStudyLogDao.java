@@ -49,66 +49,66 @@ public class InMemoryStudyLogDao implements StudyLogDao {
         return studyLog;
     }
 
-//    // ========== READ ==========
-//    /**
-//     * ID로 학습 일지 조회
-//     */
-//    @Override
-//    public Optional<StudyLog> findById(Long id) {
-//        return Optional.ofNullable(database.get(id));
-//    }
-//
-//    /**
-//     * 전체 학습 일지 조회 (최신순 정렬)
-//     */
-//    @Override
-//    public List<StudyLog> findAll() {
-//        return database.values().stream()
-//                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
-//                //.sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<StudyLog> findByCategory(String category) {
-//        try {
-//            Category categoryEnum = Category.valueOf(category.toUpperCase());
-//            return findByCategory(categoryEnum);
-//        } catch (IllegalArgumentException e) {
-//            return new ArrayList<>();
-//        }
-//    }
-//
-//    /**
-//     * 카테고리 학습 일지 조회
-//     */
-//    @Override
-//    public List<StudyLog> findByCategory(Category category) {
-//        return database.values().stream()
-//                .filter(log -> log.getCategory().equals(category))
-//                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
-//                .collect(Collectors.toList());
-//    }
-//    /**
-//     * 날짜로 학습 일지 조회
-//     */
-//    public List<StudyLog> findByStudyDate(LocalDate date) {
-//        return database.values().stream()
-//                .filter(log -> log.getStudyDate().equals(date))
-//                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public boolean existsById(Long id) {
-//        return database.containsKey(id);
-//    }
-//
-//    @Override
-//    public long count() {
-//        return database.size();
-//    }
-//
+    // ========== READ ==========
+    /**
+     * ID로 학습 일지 조회
+     */
+    @Override
+    public Optional<StudyLog> findById(Long id) {
+        return Optional.ofNullable(database.get(id));
+    }
+
+    /**
+     * 전체 학습 일지 조회 (최신순 정렬)
+     */
+    @Override
+    public List<StudyLog> findAll() {
+        return database.values().stream()
+                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
+                //.sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyLog> findByCategory(String category) {
+        try {
+            Category categoryEnum = Category.valueOf(category.toUpperCase());
+            return findByCategory(categoryEnum);
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 카테고리 학습 일지 조회
+     */
+    private List<StudyLog> findByCategory(Category category) {
+        return database.values().stream()
+                .filter(log -> log.getCategory().equals(category))
+                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
+                .collect(Collectors.toList());
+    }
+    /**
+     * 날짜로 학습 일지 조회
+     */
+    @Override
+    public List<StudyLog> findByStudyDate(LocalDate date) {
+        return database.values().stream()
+                .filter(log -> log.getStudyDate().equals(date))
+                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return database.containsKey(id);
+    }
+
+    @Override
+    public long count() {
+        return database.size();
+    }
+
 //    // ========== UPDATE ==========
 //
 //    /**
