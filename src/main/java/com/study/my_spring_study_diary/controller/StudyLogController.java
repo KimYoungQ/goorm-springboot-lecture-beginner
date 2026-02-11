@@ -9,6 +9,7 @@ import com.study.my_spring_study_diary.global.common.ApiResponse;
 import com.study.my_spring_study_diary.global.common.PageRequest;
 import com.study.my_spring_study_diary.global.common.PageResponse;
 import com.study.my_spring_study_diary.service.StudyLogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +32,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/logs")
+@RequiredArgsConstructor
 public class StudyLogController {
 
     private final StudyLogService studyLogService;
-
-    public StudyLogController(StudyLogService studyLogService) {
-        this.studyLogService = studyLogService;
-    }
 
     /**
      * 학습 일지 생성 (CREATE)

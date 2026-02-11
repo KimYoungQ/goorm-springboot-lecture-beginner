@@ -10,6 +10,7 @@ import com.study.my_spring_study_diary.entity.StudyLog;
 import com.study.my_spring_study_diary.entity.Understanding;
 import com.study.my_spring_study_diary.global.common.PageRequest;
 import com.study.my_spring_study_diary.global.common.PageResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,7 +26,9 @@ import java.util.stream.Collectors;
  * - 비즈니스 로직을 담당하는 서비스 계층임을 명시합니다
  * - @Component와 기능적으로 동일하지만, 역할을 명확히 표현합니다
  */
+
 @Service
+@RequiredArgsConstructor
 public class StudyLogService {
 
     // 의존성 주입: Repository를 주입받음
@@ -37,9 +40,9 @@ public class StudyLogService {
      * Spring이 StudyLogRepository Bean을 찾아서 자동으로 주입해줍니다.
      * 생성자가 1개만 있으면 @Autowired 생략 가능!
      */
-    public StudyLogService(StudyLogDao studyLogDao) {
-        this.studyLogDao = studyLogDao;
-    }
+//    public StudyLogService(StudyLogDao studyLogDao) {
+//        this.studyLogDao = studyLogDao;
+//    }
 
     /**
      * 학습 일지 생성
