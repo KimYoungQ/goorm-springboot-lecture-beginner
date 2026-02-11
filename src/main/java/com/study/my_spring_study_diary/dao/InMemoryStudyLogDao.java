@@ -49,100 +49,100 @@ public class InMemoryStudyLogDao implements StudyLogDao {
         return studyLog;
     }
 
-//    // ========== READ ==========
-//    /**
-//     * ID로 학습 일지 조회
-//     */
-//    @Override
-//    public Optional<StudyLog> findById(Long id) {
-//        return Optional.ofNullable(database.get(id));
-//    }
-//
-//    /**
-//     * 전체 학습 일지 조회 (최신순 정렬)
-//     */
-//    @Override
-//    public List<StudyLog> findAll() {
-//        return database.values().stream()
-//                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
-//                //.sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<StudyLog> findByCategory(String category) {
-//        try {
-//            Category categoryEnum = Category.valueOf(category.toUpperCase());
-//            return findByCategory(categoryEnum);
-//        } catch (IllegalArgumentException e) {
-//            return new ArrayList<>();
-//        }
-//    }
-//
-//    /**
-//     * 카테고리 학습 일지 조회
-//     */
-//    @Override
-//    public List<StudyLog> findByCategory(Category category) {
-//        return database.values().stream()
-//                .filter(log -> log.getCategory().equals(category))
-//                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
-//                .collect(Collectors.toList());
-//    }
-//    /**
-//     * 날짜로 학습 일지 조회
-//     */
-//    public List<StudyLog> findByStudyDate(LocalDate date) {
-//        return database.values().stream()
-//                .filter(log -> log.getStudyDate().equals(date))
-//                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public boolean existsById(Long id) {
-//        return database.containsKey(id);
-//    }
-//
-//    @Override
-//    public long count() {
-//        return database.size();
-//    }
-//
-//    // ========== UPDATE ==========
-//
-//    /**
-//     * 학습 일지 수정 (Update)
-//     * Map은 같은 키로 put하면 덮어쓰므로 save와 동일하게 동작
-//     * 하지만 의미를 명확히 하기 위해 별도 메서드로 분리
-//     */
-//    @Override
-//    public StudyLog update(StudyLog studyLog) {
-//        validationStudyLogById(studyLog);
-//
-//        // updatedAt 갱신
-//        studyLog.setUpdatedAt(java.time.LocalDateTime.now());
-//
-//        database.put(studyLog.getId(), studyLog);
-//        return studyLog;
-//    }
-//
-//    /**
-//     * studyLog의 ID 값 검증
-//     */
-//    private void validationStudyLogById(StudyLog studyLog) {
-//        if (studyLog.getId() == null) {
-//            throw new IllegalArgumentException("수정할 학습 일지의 ID가 없습니다.");
-//        }
-//
-//        if (!database.containsKey(studyLog.getId())) {
-//            throw new IllegalArgumentException(
-//                    "해당 학습 일지를 찾을 수 없습니다. (id: " + studyLog.getId() + ")"
-//            );
-//        }
-//    }
-//
-//
+    // ========== READ ==========
+    /**
+     * ID로 학습 일지 조회
+     */
+    @Override
+    public Optional<StudyLog> findById(Long id) {
+        return Optional.ofNullable(database.get(id));
+    }
+
+    /**
+     * 전체 학습 일지 조회 (최신순 정렬)
+     */
+    @Override
+    public List<StudyLog> findAll() {
+        return database.values().stream()
+                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
+                //.sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyLog> findByCategory(String category) {
+        try {
+            Category categoryEnum = Category.valueOf(category.toUpperCase());
+            return findByCategory(categoryEnum);
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 카테고리 학습 일지 조회
+     */
+    private List<StudyLog> findByCategory(Category category) {
+        return database.values().stream()
+                .filter(log -> log.getCategory().equals(category))
+                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
+                .collect(Collectors.toList());
+    }
+    /**
+     * 날짜로 학습 일지 조회
+     */
+    @Override
+    public List<StudyLog> findByStudyDate(LocalDate date) {
+        return database.values().stream()
+                .filter(log -> log.getStudyDate().equals(date))
+                .sorted(Comparator.comparing(StudyLog::getCreatedAt))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return database.containsKey(id);
+    }
+
+    @Override
+    public long count() {
+        return database.size();
+    }
+
+    // ========== UPDATE ==========
+
+    /**
+     * 학습 일지 수정 (Update)
+     * Map은 같은 키로 put하면 덮어쓰므로 save와 동일하게 동작
+     * 하지만 의미를 명확히 하기 위해 별도 메서드로 분리
+     */
+    @Override
+    public StudyLog update(StudyLog studyLog) {
+        validationStudyLogById(studyLog);
+
+        // updatedAt 갱신
+        studyLog.setUpdatedAt(java.time.LocalDateTime.now());
+
+        database.put(studyLog.getId(), studyLog);
+        return studyLog;
+    }
+
+    /**
+     * studyLog의 ID 값 검증
+     */
+    private void validationStudyLogById(StudyLog studyLog) {
+        if (studyLog.getId() == null) {
+            throw new IllegalArgumentException("수정할 학습 일지의 ID가 없습니다.");
+        }
+
+        if (!database.containsKey(studyLog.getId())) {
+            throw new IllegalArgumentException(
+                    "해당 학습 일지를 찾을 수 없습니다. (id: " + studyLog.getId() + ")"
+            );
+        }
+    }
+
+
 //    // ========== DELETE ==========
 //    @Override
 //    public boolean deleteById(Long id) {

@@ -60,12 +60,12 @@ public class StudyLogController {
      * <p>
      * GET /api/v1/logs
      */
-//    @GetMapping
-//    public List<StudyLogResponse> getAllStudyLogs() {
-//
-//        // Service 호출하여 모든 학습 일지 조회
-//        return studyLogService.getAllStudyLogs();
-//    }
+    @GetMapping
+    public List<StudyLogResponse> getAllStudyLogs() {
+
+        // Service 호출하여 모든 학습 일지 조회
+        return studyLogService.getAllStudyLogs();
+    }
 
     /**
      * 특정 학습 일지 조회 (READ - Single)
@@ -75,10 +75,10 @@ public class StudyLogController {
      * <p>
      * GET /api/v1/logs/{id}
      */
-//    @GetMapping("/{id}")
-//    public StudyLogResponse getStudyLogById(@PathVariable Long id) {
-//        return studyLogService.getStudyLogById(id);
-//    }
+    @GetMapping("/{id}")
+    public StudyLogResponse getStudyLogById(@PathVariable Long id) {
+        return studyLogService.getStudyLogById(id);
+    }
 
     /**
      * 날짜별 학습 일지 조회 (READ - By Date)
@@ -89,13 +89,13 @@ public class StudyLogController {
      * GET /api/v1/logs/date/{date}
      * 예시: GET /api/v1/logs/date/2025-01-15
      */
-//    @GetMapping("/date/{date}")
-//    public List<StudyLogResponse> getStudyLogByDate(
-//            @PathVariable
-//            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-//            LocalDate date) {
-//        return studyLogService.getStudyLogsByDate(date);
-//    }
+    @GetMapping("/date/{date}")
+    public List<StudyLogResponse> getStudyLogByDate(
+            @PathVariable
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate date) {
+        return studyLogService.getStudyLogsByDate(date);
+    }
 
     /**
      * 카테고리별 학습 일지 조회 (READ - By Category)
@@ -107,10 +107,10 @@ public class StudyLogController {
      * 예시: GET /api/v1/logs/category/SPRING
      * GET /api/v1/logs/category/JAVA
      */
-//    @GetMapping("/category/{category}")
-//    public List<StudyLogResponse> getStudyLogsByCategory(@PathVariable String category) {
-//        return studyLogService.getStudyLogsByCategory(category);
-//    }
+    @GetMapping("/category/{category}")
+    public List<StudyLogResponse> getStudyLogsByCategory(@PathVariable String category) {
+        return studyLogService.getStudyLogsByCategory(category);
+    }
 
     /**
      * 페이징 처리된 학습 일지 목록 조회
@@ -143,14 +143,14 @@ public class StudyLogController {
      * @PathVariable: URL의 {id} 부분을 파라미터로 받음
      * @RequestBody: HTTP Body의 JSON을 객체로 변환
      */
-//    @PutMapping("/{id}")
-//    public StudyLogResponse updateStudyLog(
-//            @PathVariable Long id,
-//            @RequestBody StudyLogUpdateRequest request) {
-//        StudyLogResponse response = studyLogService.updateStudyLog(id, request);
-//
-//        return response;
-//    }
+    @PutMapping("/{id}")
+    public StudyLogResponse updateStudyLog(
+            @PathVariable Long id,
+            @RequestBody StudyLogUpdateRequest request) {
+        StudyLogResponse response = studyLogService.updateStudyLog(id, request);
+
+        return response;
+    }
 
     // ========== DELETE ==========
 
