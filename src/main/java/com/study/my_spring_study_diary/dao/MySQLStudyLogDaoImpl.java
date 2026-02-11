@@ -22,11 +22,6 @@ public class MySQLStudyLogDaoImpl implements StudyLogDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("🚀 MySQL 커넥션 완료!");
-    }
-
     // ========== CREATE ==========
     public StudyLog save(StudyLog studyLog) {
         String sql = """

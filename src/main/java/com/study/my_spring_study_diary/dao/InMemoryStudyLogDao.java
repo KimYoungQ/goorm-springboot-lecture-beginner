@@ -24,10 +24,11 @@ public class InMemoryStudyLogDao implements StudyLogDao {
     // ID 자동 증가를 위한 시퀀스
     private final AtomicLong sequence = new AtomicLong(1);
 
-    @PostConstruct
-    public void init() {
-        System.out.println("🚀 InMemoryDB 커넥션 완료!");
-    }
+//    @PostConstruct
+//    public void init() {
+//        System.out.println("🚀 InMemoryDB 커넥션 완료!");
+//    }
+
     // ========== CREATE ==========
     /**
      * 학습 일지 저장
