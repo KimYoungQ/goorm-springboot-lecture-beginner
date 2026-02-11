@@ -102,6 +102,34 @@ public class MySQLStudyLogDaoImpl implements StudyLogDao {
         return count != null ? count : 0;
     }
 
+    // ========== UPDATE ==========
+
+    @Override
+    public StudyLog update(StudyLog studyLog) {
+        String sql = """
+                UPDATE study_logs
+                SET title = ?, content = ?, category = ?, understanding = ?,
+                    study_time = ?, study_date = ?
+                WHERE id = ?
+                """;
+
+        int updated = jdbcTemplate.update(sql,
+                studyLog.getTitle(),
+                studyLog.getContent(),
+                studyLog.getCategory().name(),
+                studyLog.getUnderstanding().name(),
+                studyLog.getStudyTime(),
+                studyLog.getStudyDate(),
+                studyLog.getId());
+
+        if (updated == 0) {
+            throw new RuntimeException("Study log not found. ID: " + studyLog.getId());
+        }
+
+        return studyLog;
+    }
+
+
     // ========== PRIVATE METHODS ==========
 
     /**

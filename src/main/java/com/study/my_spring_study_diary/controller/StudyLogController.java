@@ -143,14 +143,14 @@ public class StudyLogController {
      * @PathVariable: URL의 {id} 부분을 파라미터로 받음
      * @RequestBody: HTTP Body의 JSON을 객체로 변환
      */
-//    @PutMapping("/{id}")
-//    public StudyLogResponse updateStudyLog(
-//            @PathVariable Long id,
-//            @RequestBody StudyLogUpdateRequest request) {
-//        StudyLogResponse response = studyLogService.updateStudyLog(id, request);
-//
-//        return response;
-//    }
+    @PutMapping("/{id}")
+    public StudyLogResponse updateStudyLog(
+            @PathVariable Long id,
+            @RequestBody StudyLogUpdateRequest request) {
+        StudyLogResponse response = studyLogService.updateStudyLog(id, request);
+
+        return response;
+    }
 
     // ========== DELETE ==========
 

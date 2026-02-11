@@ -182,48 +182,48 @@ public class StudyLogService {
      * @param request 수정 요청 데이터
      * @return 수정된 학습 일지 응답
      */
-//    public StudyLogResponse updateStudyLog(Long id, StudyLogUpdateRequest request) {
-//
-//        // 1. 기존 학습 일지 조회
-//        StudyLog studyLog = studyLogDao.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException(
-//                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
-//
-//        // 2. 수정할 내용이 있는지 확인
-//        if (request.hasNoUpdates()) {
-//            throw new IllegalArgumentException("수정할 내용이 없습니다.");
-//        }
-//
-//        // 3. 수정할 값들의 유효성 검증
-//        validateUpdateRequest(request);
-//
-//        // 4. 카테고리와 이해도 변환 (null이 아닌 경우에만);
-//        Category category = null;
-//        if (request.getCategory() != null) {
-//            try {
-//                category = Category.valueOf(request.getCategory().toUpperCase());
-//            } catch (IllegalArgumentException e) {
-//                throw new IllegalArgumentException(
-//                        "유효하지 않은 카테고리입니다: " + request.getCategory());
-//            }
-//        }
-//
-//        Understanding understanding = null;
-//        if (request.getUnderstanding() != null) {
-//            try {
-//                understanding = Understanding.valueOf(request.getUnderstanding().toUpperCase());
-//            } catch (IllegalArgumentException e) {
-//                throw new IllegalArgumentException(
-//                        "유효하지 않은 이해도입니다: " + request.getUnderstanding());
-//            }
-//        }
-//
-//        studyLog.update(request);
-//
-//        // 6. 저장 및 응답 반환
-//        StudyLog updatedStudying = studyLogDao.update(studyLog);
-//        return StudyLogResponse.from(updatedStudying);
-//    }
+    public StudyLogResponse updateStudyLog(Long id, StudyLogUpdateRequest request) {
+
+        // 1. 기존 학습 일지 조회
+        StudyLog studyLog = studyLogDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
+
+        // 2. 수정할 내용이 있는지 확인
+        if (request.hasNoUpdates()) {
+            throw new IllegalArgumentException("수정할 내용이 없습니다.");
+        }
+
+        // 3. 수정할 값들의 유효성 검증
+        validateUpdateRequest(request);
+
+        // 4. 카테고리와 이해도 변환 (null이 아닌 경우에만);
+        Category category = null;
+        if (request.getCategory() != null) {
+            try {
+                category = Category.valueOf(request.getCategory().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(
+                        "유효하지 않은 카테고리입니다: " + request.getCategory());
+            }
+        }
+
+        Understanding understanding = null;
+        if (request.getUnderstanding() != null) {
+            try {
+                understanding = Understanding.valueOf(request.getUnderstanding().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(
+                        "유효하지 않은 이해도입니다: " + request.getUnderstanding());
+            }
+        }
+
+        studyLog.update(request);
+
+        // 6. 저장 및 응답 반환
+        StudyLog updatedStudying = studyLogDao.update(studyLog);
+        return StudyLogResponse.from(updatedStudying);
+    }
 
     /**
      * 생성 요청 유효성 검증

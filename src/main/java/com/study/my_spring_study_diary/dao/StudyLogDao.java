@@ -26,8 +26,9 @@ public interface StudyLogDao {
     long count();
 
     // ========== UPDATE ==========
-//    StudyLog update(StudyLog studyLog);
-//
+    StudyLog update(StudyLog studyLog);
+
+    // ========== DELETE ==========
 //    boolean deleteById(Long id);
 //
 //    void deleteAll();
