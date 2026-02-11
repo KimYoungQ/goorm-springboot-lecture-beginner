@@ -1,14 +1,14 @@
 package com.study.my_spring_study_diary.dao;
 
+import com.study.my_spring_study_diary.common.Page;
 import com.study.my_spring_study_diary.entity.Category;
 import com.study.my_spring_study_diary.entity.StudyLog;
 import com.study.my_spring_study_diary.exception.InvalidPageRequestException;
-import com.study.my_spring_study_diary.global.common.PageRequest;
-import com.study.my_spring_study_diary.global.common.PageResponse;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -23,6 +23,11 @@ public class InMemoryStudyLogDao implements StudyLogDao {
 
     // ID 자동 증가를 위한 시퀀스
     private final AtomicLong sequence = new AtomicLong(1);
+    private final ContentNegotiatingViewResolver contentNegotiatingViewResolver;
+
+    public InMemoryStudyLogDao(ContentNegotiatingViewResolver contentNegotiatingViewResolver) {
+        this.contentNegotiatingViewResolver = contentNegotiatingViewResolver;
+    }
 
 //    @PostConstruct
 //    public void init() {
@@ -142,6 +147,49 @@ public class InMemoryStudyLogDao implements StudyLogDao {
         }
     }
 
+    @Override
+    public Page<StudyLog> searchWithPaging(String titleKeyword, String category, LocalDate startDate, LocalDate endDate, int page, int size) {
+
+        List<StudyLog> filteredLogs = database.values().stream()
+                .filter(log -> {
+                    boolean matches = true;
+
+                    // 제목 키워드 필터
+                    if (titleKeyword != null && !titleKeyword.isBlank()) {
+                        matches = log.getTitle().contains(titleKeyword);
+                    }
+
+                    // 카테고리 필터
+                    if (matches && category != null && !category.isBlank()) {
+                        matches = log.getCategory().name().equals(category);
+                    }
+
+                    // 시작 날짜 필터
+                    if (matches && startDate != null) {
+                        matches = !log.getStudyDate().isBefore(startDate);
+                    }
+
+                    // 종료 날짜 필터
+                    if (matches && endDate != null) {
+                        matches = !log.getStudyDate().isAfter(endDate);
+                    }
+
+                    return matches;
+                })
+                .sorted((a, b) -> b.getId().compareTo(a.getId()))
+                .collect(Collectors.toList());
+
+        int totalElements = filteredLogs.size();
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalElements);
+
+        if (fromIndex >= totalElements) {
+            return new Page<>(new ArrayList<>(), page, size, totalElements);
+        }
+
+        List<StudyLog> content = filteredLogs.subList(fromIndex, toIndex);
+        return new Page<>(content, page, size, totalElements);
+    }
 
     // ========== DELETE ==========
     @Override
@@ -157,120 +205,68 @@ public class InMemoryStudyLogDao implements StudyLogDao {
         // 테스트 용도로 시퀀스도 초기화
         sequence.set(1);
     }
-//    /**
-//     * 페이징 처리된 학습 일지 조회
-//     *
-//     * @param pageRequest 페이징 요청 정보
-//     * @return 페이징 처리된 결과
-//     */
-//    public PageResponse<StudyLog> findAllWithPaging(PageRequest pageRequest) {
-//
-//        // 1.전체 데이터를 정렬
-//        List<StudyLog> allLogs = database.values().stream()
-//                .sorted((a,b) -> {
-//                    // 정렬 기준에 따라 정렬
-//                    int result = switch (pageRequest.getSortBy()) {
-//                        case "title" -> a.getTitle().compareTo(b.getTitle());
-//                        case "studyTime" -> a.getStudyTime().compareTo(b.getStudyTime());
-//                        case "studyDate" -> a.getStudyDate().compareTo(b.getStudyDate());
-//                        default -> a.getCreatedAt().compareTo(b.getCreatedAt());
-//                    };
-//
-//                    // 정렬 방향 적용
-//                    return "ASC".equals(pageRequest.getSortDirection()) ? result : -result;
-//                })
-//                .collect(Collectors.toList());
-//
-//        // 2. 전체 개수
-//        long totalElements = allLogs.size();
-//
-//        // 3. 총 페이지 수 계산
-//        int totalPages = calculateTotalPages(totalElements, pageRequest.getSize());
-//
-//        // 4. 요청한 페이지 번호 유효성 검증
-//        int requestedPage = pageRequest.getPage();
-//
-//        if (requestedPage < 0) {
-//            throw new InvalidPageRequestException(requestedPage, totalPages);
-//        }
-//
-//        if (totalElements > 0 && requestedPage >= totalPages) {
-//            throw new InvalidPageRequestException(requestedPage, totalPages);
-//        }
-//
-//        // 5. 페이징 적용
-//        int start = pageRequest.getOffset();
-//        int end = Math.min(start + pageRequest.getSize(), allLogs.size());
-//
-//        List<StudyLog> pagedLogs = allLogs.subList(start, end);
-//
-//        // 6. PageResponse 생성
-//        return PageResponse.of(
-//                pagedLogs,
-//                pageRequest.getPage(),
-//                pageRequest.getSize(),
-//                totalElements,
-//                totalPages
-//        );
-//    }
-//
-//    /**
-//     * 카테고리별 페이징 조회
-//     *
-//     * @param category    카테고리
-//     * @param pageRequest 페이징 요청 정보
-//     * @return 페이징 처리된 결과
-//     */
-//    public PageResponse<StudyLog> findByCategoryWithPaging(Category category, PageRequest pageRequest) {
-//
-//        // 1. 카테코리로 필터링 및 정렬
-//        List<StudyLog> filteredLogs = database.values().stream()
-//                .filter(log -> log.getCategory() == category)
-//                .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
-//                .collect(Collectors.toList());
-//
-//        // 2. 전체 개수
-//        long totalElements = filteredLogs.size();
-//
-//        // 3. 총 페이지 수 계산
-//        int totalPages = calculateTotalPages(totalElements, pageRequest.getSize());
-//
-//        // 4. 요청한 페이지 번호 유효성 검증
-//        int requestedPage = pageRequest.getPage();
-//
-//        if (requestedPage < 0) {
-//            throw new InvalidPageRequestException(requestedPage, totalPages);
-//        }
-//
-//        if (totalElements > 0 && requestedPage >= totalPages) {
-//            throw new InvalidPageRequestException(requestedPage, totalPages);
-//        }
-//
-//        // 5. 페이징 적용
-//        int start = pageRequest.getOffset();
-//        int end = Math.min(start + pageRequest.getSize(), filteredLogs.size());
-//
-//        List<StudyLog> pagedLogs = filteredLogs.subList(start, end);
-//
-//        // 6. PageResponse 생성
-//        return PageResponse.of(
-//                pagedLogs,
-//                pageRequest.getPage(),
-//                pageRequest.getSize(),
-//                totalElements,
-//                totalPages
-//        );
-//
-//    }
-//
-//    /**
-//     * 총 페이지 수 계산
-//     * @param totalElements 전체 데이터 개수
-//     * @param pageSize      페이지 크기
-//     * @return 총 페이지 수
-//     */
-//    private int calculateTotalPages(long totalElements, int pageSize) {
-//        return (int) Math.ceil((double) totalElements / pageSize);
-//    }
+
+    /**
+     * 페이징 처리된 학습 일지 조회
+     *
+     * @param page 현재 페이지 번호
+     * @param size 페이지당 데이터 개수
+     * @return 페이징 처리된 결과
+     */
+    public Page<StudyLog> findAllWithPaging(int page, int size) {
+
+        // 1.전체 데이터를 정렬
+        List<StudyLog> allLogs = database.values().stream()
+                .sorted((a, b) -> b.getId().compareTo(a.getId()))
+                .collect(Collectors.toList());
+
+        int totalElements = allLogs.size();
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalElements);
+
+        if (fromIndex >= totalElements) {
+            return new Page<>(new ArrayList<>(), page, size, totalElements);
+        }
+
+        List<StudyLog> content = allLogs.subList(fromIndex, toIndex);
+        return new Page<>(content, page, size, totalElements);
+    }
+
+    /**
+     * 카테고리별 페이징 조회
+     *
+     * @param category    카테고리
+     * @param pageRequest 페이징 요청 정보
+     * @return 페이징 처리된 결과
+     */
+    public Page<StudyLog> findByCategoryWithPaging(String Category, int page, int size) {
+
+        // 1. 카테코리로 필터링 및 정렬
+        List<StudyLog> categoryLogs = database.values().stream()
+                .filter(log -> log.getCategory().name().equals(Category))
+                .sorted((a, b) -> a.getCreatedAt().compareTo(b.getCreatedAt()))
+                .collect(Collectors.toList());
+
+        int totalElements = categoryLogs.size();
+        int fromIndex = page * size;
+        int toIndex = Math.min(fromIndex + size, totalElements);
+
+        if (fromIndex >= totalElements) {
+            return new Page<>(new ArrayList<>(), page, size, totalElements);
+        }
+
+        List<StudyLog> content = categoryLogs.subList(fromIndex, toIndex);
+        return new Page<>(content, page, size, totalElements);
+    }
+
+    /**
+     * 총 페이지 수 계산
+     * @param totalElements 전체 데이터 개수
+     * @param pageSize      페이지 크기
+     * @return 총 페이지 수
+     */
+    private int calculateTotalPages(long totalElements, int pageSize) {
+        return (int) Math.ceil((double) totalElements / pageSize);
+    }
 
 }

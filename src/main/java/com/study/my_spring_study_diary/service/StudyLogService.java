@@ -1,5 +1,6 @@
 package com.study.my_spring_study_diary.service;
 
+import com.study.my_spring_study_diary.common.Page;
 import com.study.my_spring_study_diary.dao.StudyLogDao;
 import com.study.my_spring_study_diary.dto.request.StudyLogCreateRequest;
 import com.study.my_spring_study_diary.dto.request.StudyLogUpdateRequest;
@@ -8,8 +9,6 @@ import com.study.my_spring_study_diary.dto.response.StudyLogResponse;
 import com.study.my_spring_study_diary.entity.Category;
 import com.study.my_spring_study_diary.entity.StudyLog;
 import com.study.my_spring_study_diary.entity.Understanding;
-import com.study.my_spring_study_diary.global.common.PageRequest;
-import com.study.my_spring_study_diary.global.common.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +33,9 @@ public class StudyLogService {
     // 의존성 주입: Repository를 주입받음
     private final StudyLogDao studyLogDao;
 
-    /**
-     * 생성자 주입 (Constructor Injection)
-     * <p>
-     * Spring이 StudyLogRepository Bean을 찾아서 자동으로 주입해줍니다.
-     * 생성자가 1개만 있으면 @Autowired 생략 가능!
-     */
-//    public StudyLogService(StudyLogDao studyLogDao) {
-//        this.studyLogDao = studyLogDao;
-//    }
+    // 페이징 관련 상수
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MAX_PAGE_SIZE = 100;
 
     /**
      * 학습 일지 생성
@@ -128,55 +121,87 @@ public class StudyLogService {
                 .collect(Collectors.toList());
     }
 
+    // ========== PAGING ==========
+
     /**
      * 페이징 처리된 학습 일지 목록 조회
      */
-//    public PageResponse<StudyLogResponse> getStudyLogsWithPaging(PageRequest pageRequest) {
-//
-//        //Repositoty에서 페이징 처리된 데이터 조회
-//        PageResponse<StudyLog> pageResult = studyLogDao.findAllWithPaging(pageRequest);
-//
-//        //Entity를 Response DTO로 변환
-//        List<StudyLogResponse> responses = pageResult.getContent().stream()
-//                .map(StudyLogResponse::from)
-//                .collect(Collectors.toList());
-//
-//        // 페이징 정보를 유지하면서 DTO로 변환
-//        return PageResponse.of(
-//                responses,
-//                pageResult.getPageNumber(),
-//                pageResult.getPageSize(),
-//                pageResult.getTotalElements(),
-//                pageResult.getTotalPages()
-//        );
-//    }
-//
-//    /**
-//     * 카테고리별 페이징 조회
-//     */
-//    public PageResponse<StudyLogResponse> getStudyLogsByCategoryWithPaging(String categoryName, PageRequest pageRequest) {
-//
-//        Category category;
-//        try {
-//            category = Category.valueOf(categoryName.toUpperCase());
-//        } catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException("유효하지 않은 카테고리: " + categoryName);
-//        }
-//
-//        PageResponse<StudyLog> pageResult = studyLogDao.findByCategoryWithPaging(category, pageRequest);
-//
-//        List<StudyLogResponse> responses = pageResult.getContent().stream()
-//                .map(StudyLogResponse::from)
-//                .collect(Collectors.toList());
-//
-//        return PageResponse.of(
-//                responses,
-//                pageResult.getPageNumber(),
-//                pageResult.getPageSize(),
-//                pageResult.getTotalElements(),
-//                pageResult.getTotalPages()
-//        );
-//    }
+    public Page<StudyLogResponse> getStudyLogsWithPaging(int page, int size) {
+        // 파라미터 유효성 검증
+        page = Math.max(0, page);  // 음수 방지
+        size = Math.min(Math.max(1, size), MAX_PAGE_SIZE);  // 1~100 범위
+
+        Page<StudyLog> studyLogPage = studyLogDao.findAllWithPaging(page, size);
+
+        //Entity를 Response DTO로 변환
+        List<StudyLogResponse> content = studyLogPage.getContent().stream()
+                .map(StudyLogResponse::from)
+                .collect(Collectors.toList());
+
+        // 페이징 정보를 유지하면서 DTO로 변환
+        return new Page<>(content, page, size, studyLogPage.getTotalElements());
+    }
+
+    /**
+     * 카테고리별 페이징 조회
+     */
+    public Page<StudyLogResponse> getStudyLogsByCategoryWithPaging(String categoryStr, int page, int size) {
+        // 파라미터 유효성 검증
+        page = Math.max(0, page);  // 음수 방지
+        size = Math.min(Math.max(1, size), MAX_PAGE_SIZE);  // 1~100 범위
+
+        // 카테고리 유효성 검증
+        if (categoryStr == null || categoryStr.isBlank()) {
+            return new Page<>(List.of(), page, size, 0);
+        }
+
+        Page<StudyLog> studyLogPage = studyLogDao.findByCategoryWithPaging(categoryStr.toUpperCase(), page, size);
+
+        List<StudyLogResponse> content = studyLogPage.getContent().stream()
+                .map(StudyLogResponse::from)
+                .collect(Collectors.toList());
+
+        return new Page<>(content, page, size, studyLogPage.getTotalElements());
+    }
+
+    /**
+     * 검색 + 페이징 조회
+     * @param titleKeyword 제목 키워드
+     * @param categoryStr 카테고리 문자열
+     * @param startDate 시작 날짜
+     * @param endDate 종료 날짜
+     * @param page 페이지 번호
+     * @param size 페이지 크기
+     * @return 페이징된 학습 일지 응답
+     */
+    public Page<StudyLogResponse> searchStudyLogsWithPaging(
+            String titleKeyword,
+            String categoryStr,
+            LocalDate startDate,
+            LocalDate endDate,
+            int page,
+            int size) {
+
+        page = Math.max(0, page);
+        size = Math.min(Math.max(1, size), MAX_PAGE_SIZE);
+
+        // 카테고리 문자열을 대문자로 변환 (유효성 검증은 DAO에서 처리)
+        String category = null;
+        if (categoryStr != null && !categoryStr.isBlank()) {
+            category = categoryStr.toUpperCase();
+        }
+
+        Page<StudyLog> studyLogPage = studyLogDao.searchWithPaging(
+                titleKeyword, category, startDate, endDate, page, size);
+
+        List<StudyLogResponse> content = studyLogPage.getContent().stream()
+                .map(StudyLogResponse::from)
+                .collect(Collectors.toList());
+
+        return new Page<>(content, page, size, studyLogPage.getTotalElements());
+    }
+
+    // ========== UPDATE ==========
 
     /**
      * 학습 일지 수정
