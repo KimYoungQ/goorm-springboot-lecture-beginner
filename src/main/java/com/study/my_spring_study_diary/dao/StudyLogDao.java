@@ -12,6 +12,7 @@ public interface StudyLogDao {
     // ========== CREATE ==========
     StudyLog save(StudyLog studyLog);
 
+
     // ========== READ ==========
     Optional<StudyLog> findById(Long id);
 
@@ -21,15 +22,19 @@ public interface StudyLogDao {
 
     List<StudyLog> findByStudyDate(LocalDate date);
 
-    boolean existsById(Long id);
 
-    long count();
 
     // ========== UPDATE ==========
     StudyLog update(StudyLog studyLog);
 
+
     // ========== DELETE ==========
-//    boolean deleteById(Long id);
-//
-//    void deleteAll();
+    boolean deleteById(Long id);
+
+    void deleteAll();
+
+
+    boolean existsById(Long id);
+
+    long count();
 }

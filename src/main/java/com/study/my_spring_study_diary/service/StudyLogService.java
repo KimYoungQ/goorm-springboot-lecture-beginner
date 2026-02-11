@@ -285,15 +285,15 @@ public class StudyLogService {
      * @return 삭제 결과 응답
      * @throws StudyLogNotFoundException 해당 ID의 학습 일지가validationStudyLogById 없는 경우
      */
-//    public StudyLogDeleteResponse deleteStudyLog(Long id) {
-//        StudyLog studyLog = studyLogDao.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException(
-//                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
-//
-//        //2. 삭제 수행
-//        studyLogDao.deleteById(id);
-//
-//        // 3. 삭제 결과 반환
-//        return StudyLogDeleteResponse.of(id);
-//    }
+    public StudyLogDeleteResponse deleteStudyLog(Long id) {
+        StudyLog studyLog = studyLogDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "해당 학습 일지를 찾을 수 없습니다. (id: " + id + ")"));
+
+        //2. 삭제 수행
+        studyLogDao.deleteById(id);
+
+        // 3. 삭제 결과 반환
+        return StudyLogDeleteResponse.of(id);
+    }
 }
