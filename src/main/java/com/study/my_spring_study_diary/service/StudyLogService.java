@@ -225,30 +225,10 @@ public class StudyLogService {
         // 3. 수정할 값들의 유효성 검증
         validateUpdateRequest(request);
 
-        // 4. 카테고리와 이해도 변환 (null이 아닌 경우에만);
-        Category category = null;
-        if (request.getCategory() != null) {
-            try {
-                category = Category.valueOf(request.getCategory().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(
-                        "유효하지 않은 카테고리입니다: " + request.getCategory());
-            }
-        }
-
-        Understanding understanding = null;
-        if (request.getUnderstanding() != null) {
-            try {
-                understanding = Understanding.valueOf(request.getUnderstanding().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(
-                        "유효하지 않은 이해도입니다: " + request.getUnderstanding());
-            }
-        }
-
+        // 4. 업데이트
         studyLog.update(request);
 
-        // 6. 저장 및 응답 반환
+        // 5. 저장 및 응답 반환
         StudyLog updatedStudying = studyLogDao.update(studyLog);
         return StudyLogResponse.from(updatedStudying);
     }
@@ -271,6 +251,14 @@ public class StudyLogService {
         }
         if (request.getStudyTime() == null || request.getStudyTime() < 1) {
             throw new IllegalArgumentException("학습 시간은 1분 이상이어야 합니다.");
+        }
+        if (Category.from(request.getCategory()) == null || request.getCategory().trim().isEmpty() ) {
+            throw new IllegalArgumentException(
+                    "유효하지 않은 카테고리입니다: " + request.getCategory());
+        }
+        if (Understanding.from(request.getCategory()) == null || request.getUnderstanding().trim().isEmpty() ) {
+            throw new IllegalArgumentException(
+                    "유효하지 않은 이해도입니다: " + request.getCategory());
         }
     }
 
@@ -303,6 +291,16 @@ public class StudyLogService {
 
         if (request.getStudyDate() != null && request.getStudyDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("학습 날짜는 미래일 수 없습니다.");
+        }
+
+        if (request.getCategory() != null && Category.from(request.getCategory()) == null) {
+            throw new IllegalArgumentException(
+                    "유효하지 않은 카테고리입니다: " + request.getCategory());
+        }
+
+        if (request.getUnderstanding() != null && Understanding.from(request.getUnderstanding()) == null) {
+            throw new IllegalArgumentException(
+                    "유효하지 않은 이해도입니다: " + request.getCategory());
         }
     }
 

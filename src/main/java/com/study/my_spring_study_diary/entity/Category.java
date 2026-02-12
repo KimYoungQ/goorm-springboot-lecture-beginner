@@ -26,6 +26,15 @@ public enum Category {
     public String getDescription() {
         return description;
     }
+
+    // null 체크
+    public static Category from(String value) {
+        try {
+            return Category.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }
 
 
