@@ -22,4 +22,13 @@ public enum Understanding {
     public String getDescription() {
         return description;
     }
+
+    // null 체크
+    public static Understanding from(String value) {
+        try {
+            return Understanding.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }
