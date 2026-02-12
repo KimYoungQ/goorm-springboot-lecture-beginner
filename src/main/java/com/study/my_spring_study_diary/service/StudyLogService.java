@@ -256,7 +256,7 @@ public class StudyLogService {
             throw new IllegalArgumentException(
                     "유효하지 않은 카테고리입니다: " + request.getCategory());
         }
-        if (Understanding.from(request.getCategory()) == null || request.getUnderstanding().trim().isEmpty() ) {
+        if (Understanding.from(request.getUnderstanding()) == null || request.getUnderstanding().trim().isEmpty() ) {
             throw new IllegalArgumentException(
                     "유효하지 않은 이해도입니다: " + request.getCategory());
         }
